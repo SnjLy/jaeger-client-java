@@ -18,6 +18,9 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 
+/**
+ * 通过 ThreadLocalRandom.current() 产生随机数Random
+ */
 public final class Java6CompatibleThreadLocalRandom {
 
   static boolean threadLocalRandomPresent = true;
@@ -42,6 +45,7 @@ public final class Java6CompatibleThreadLocalRandom {
       };
 
   /**
+   * 如果存在 {@link java.util.concurrent.ThreadLocalRandom} 则用ThreadLocalRandom.current() 产生随机数，否则使用{@link ThreadLocal<Random>}产生随机数
    * Calls {@link ThreadLocalRandom#current()}, if this class is present (if you are using Java 7).
    * Otherwise uses a Java 6 compatible fallback.
    *

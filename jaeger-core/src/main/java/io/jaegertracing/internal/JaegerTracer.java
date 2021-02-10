@@ -206,6 +206,11 @@ public class JaegerTracer implements Tracer, Closeable {
     return this.scopeManager.activeSpan();
   }
 
+  /**
+   * 核心方法，根据tracer构建span
+   * @param operationName
+   * @return
+   */
   @Override
   public JaegerTracer.SpanBuilder buildSpan(String operationName) {
     return objectFactory.createSpanBuilder(this, operationName);
@@ -341,6 +346,8 @@ public class JaegerTracer implements Tracer, Closeable {
 
     private JaegerSpanContext createNewContext() {
       String debugId = getDebugId();
+      //产生spanId和traceId。
+      //计算随机数作为spanId
       long spanId = Utils.uniqueId();
       long traceIdLow = spanId;
       long traceIdHigh = isUseTraceId128Bit() ? Utils.uniqueId() : 0;
@@ -455,6 +462,10 @@ public class JaegerTracer implements Tracer, Closeable {
       return references.get(0).getSpanContext().getDebugId();
     }
 
+    /**
+     * 开启span
+     * @return
+     */
     @Override
     public JaegerSpan start() {
       JaegerSpanContext context;
@@ -703,6 +714,10 @@ public class JaegerTracer implements Tracer, Closeable {
       return createTracer();
     }
 
+    /**
+     * 核心根据build生成对应的trace
+     * @return
+     */
     protected JaegerTracer createTracer() {
       return new JaegerTracer(this);
     }

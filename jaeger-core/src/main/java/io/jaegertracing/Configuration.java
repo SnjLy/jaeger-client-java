@@ -215,9 +215,11 @@ public class Configuration {
 
   public JaegerTracer.Builder getTracerBuilder() {
     if (reporterConfig == null) {
+      //数据上报配置   默认RemoteReporter
       reporterConfig = new ReporterConfiguration();
     }
     if (samplerConfig == null) {
+      //采样配置
       samplerConfig = new SamplerConfiguration();
     }
     if (codecConfig == null) {
@@ -245,11 +247,16 @@ public class Configuration {
     return new JaegerTracer.Builder(serviceName);
   }
 
+  /**
+   * 1. 获取tracer实例 入口
+   * @return
+   */
   public synchronized JaegerTracer getTracer() {
     if (tracer != null) {
       return tracer;
     }
-
+    //没有实例化则通过配置实例化 Initialized tracer
+    //核心是 io.jaegertracing.internal.JaegerTracer.Builder.build
     tracer = getTracerBuilder().build();
     log.info("Initialized tracer={}", tracer);
 
@@ -550,6 +557,11 @@ public class Configuration {
     }
   }
 
+  /**
+   * 数据上报configuration,
+   * Reporter getReporter(Metrics metrics)
+   *  Default implementation is remote reporter that sends spans out of process
+   */
   public static class ReporterConfiguration {
     private Boolean logSpans;
     private Integer flushIntervalMs;
@@ -621,7 +633,7 @@ public class Configuration {
 
   /**
    * Holds the configuration related to the sender. A sender is resolved using a {@link SenderResolver}.
-   *
+   * senderConfiguration for sender,配置获取具体的sender,实现具体的数据发送
    */
   @Getter
   public static class SenderConfiguration {

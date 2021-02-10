@@ -71,7 +71,7 @@ public class JaegerSpanContext implements SpanContext {
     this.baggage = baggage;
     this.debugId = debugId;
     this.objectFactory = objectFactory;
-    this.traceIdAsString = convertTraceId();
+    this.traceIdAsString = convertTraceId();    //用的traceIdHigh 的16进制形式
     this.spanIdAsString = Utils.to16HexString(spanId);
   }
 
@@ -97,6 +97,10 @@ public class JaegerSpanContext implements SpanContext {
     return hexStringHigh + hexStringLow;
   }
 
+  /**
+   * 返回traceId， 对应的是随机数 转16进制格式的字符串
+   * @return
+   */
   public String getTraceId() {
     return this.traceIdAsString;
   }
